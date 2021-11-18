@@ -29,13 +29,13 @@ spec:
         serviceAccountName: icenotes-fe
         params:
           - name: app-name
-            value: nextjs
+            value: icenotes
           - name: source-repo
             value: $(tt.params.source-repo)
           - name: commit-sha
             value: $(tt.params.commit-sha)
           - name: image-repo
-            value: quay.io/bott_ibm/nextjs
+            value: quay.io/bott_ibm/icenotes-fe
         pipelineRef:
           name: icenotes-fe-pipeline
         workspaces:
