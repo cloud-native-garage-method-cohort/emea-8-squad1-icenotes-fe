@@ -32,18 +32,18 @@ spec:
       workspaces:
         - name: output
           workspace: shared-data
-    - name: run-tests
-      params:
-        - name: ARGS
-          value:
-            - install-ci-test
-      runAfter:
-        - git-clone
-      taskRef:
-        name: npm
-      workspaces:
-        - name: source
-          workspace: shared-data
+    # - name: run-tests
+    #   params:
+    #     - name: ARGS
+    #       value:
+    #         - install-ci-test
+    #   runAfter:
+    #     - git-clone
+    #   taskRef:
+    #     name: npm
+    #   workspaces:
+    #     - name: source
+    #       workspace: shared-data
     - name: buildah
       taskRef:
         name: buildah
@@ -55,7 +55,7 @@ spec:
       - name: source
         workspace: shared-data
       runAfter:
-        - run-tests
+        - git-clone
     - name: kustomize
       params:
         - name: app-name
@@ -67,7 +67,7 @@ spec:
         - name: image-repo
           value: "$(params.image-repo)"
       runAfter:
-        - run-tests
+        - git-clone
       taskRef:
         name: kustomize
       workspaces:
@@ -92,7 +92,7 @@ spec:
         - name: manifest
           value: "$(tasks.kustomize.results.manifest)"
         - name: app-name
-          value: "bernhard-ott-$(params.app-name)"
+          value: "$(params.app-name)-production"
         - name: sha
           value: "$(tasks.git-clone.results.commit)"
       runAfter:
