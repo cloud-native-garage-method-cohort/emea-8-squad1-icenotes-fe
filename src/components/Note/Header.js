@@ -5,7 +5,7 @@ function Header(props) {
   
   return (
     <header style={{display:"flex", alignItems:"center", justifyContent:"space-between"}}>
-      <h2 id="app-header">Notes On Cloud</h2>
+      <h2 id="app-header">IceNote</h2>
       <button className="logoutButton"  onClick={handleOnClick}>Logout</button>
     </header>
   );

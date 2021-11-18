@@ -1,7 +1,6 @@
 import React, { useState, useContext } from "react";
 import axios from 'axios';
-import {API_BASE_ROUTE, REQUEST_HEADERS} from '../../config/serverConfig';
-import UserProvider from "../../context/user.provider";
+
 
 const BLANK_NOTE = {
   title: "",
@@ -11,7 +10,7 @@ const BLANK_NOTE = {
 const CreateArea = (props) => {
   const [note, setNote] = useState(BLANK_NOTE);
   const [errorVisibility, setErrorVisibility] = useState(false);
-  const userData = useContext(UserProvider.context);
+  
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -31,17 +30,7 @@ const CreateArea = (props) => {
     }
   }
 
-  const addNoteToDB = async(note) =>{
-    const newNote = {
-      email: userData.email,
-      noteTitle: note.title,
-      noteContent: note.content,
-      timestamp: new Date(),
-    }
-    const response = await axios.post(`${API_BASE_ROUTE}/note/new`, newNote, {headers:{'x-access-token':userData.accessToken, ...REQUEST_HEADERS}});
-    console.log(response.status);
-  }
-
+  
 
   const submitNote = async(event) => {
     event.preventDefault();
@@ -49,13 +38,7 @@ const CreateArea = (props) => {
       setErrorVisibility(true);
       return;
     }
-    try{
-      await addNoteToDB(note);
-      setNote(BLANK_NOTE);
-      props.refreshNotes(userData.email, userData.accessToken);
-    }catch(err){
-      console.log(err.response);
-    }
+    
   }
 
   return (
