@@ -1,0 +1,108 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: icenotes-fe-pipeline
+spec:
+  workspaces:
+    - name: shared-data
+    - name: gitops-repository
+    - name: git-credentials
+  params:
+    - name: app-name
+    - name: source-repo
+    - name: image-repo
+    - name: commit-sha
+      type: string
+      default: ""
+      description: Precise SHA of the commit to build
+  tasks:
+    - name: git-clone
+      taskRef:
+        name: git-clone
+        kind: ClusterTask
+      params:
+        - name: url
+          value: $(params.source-repo)
+        - name: revision
+          value: $(params.commit-sha)
+        - name: subdirectory
+          value: ""
+        - name: deleteExisting
+          value: "true"
+      workspaces:
+        - name: output
+          workspace: shared-data
+    - name: run-tests
+      params:
+        - name: ARGS
+          value:
+            - install-ci-test
+      runAfter:
+        - git-clone
+      taskRef:
+        name: npm
+      workspaces:
+        - name: source
+          workspace: shared-data
+    - name: buildah
+      taskRef:
+        name: buildah
+        kind: ClusterTask
+      params:
+      - name: IMAGE
+        value: "$(params.image-repo):$(tasks.git-clone.results.commit)"
+      workspaces:
+      - name: source
+        workspace: shared-data
+      runAfter:
+        - run-tests
+    - name: kustomize
+      params:
+        - name: app-name
+          value: "$(params.app-name)"
+        - name: source-repo
+          value: "$(params.source-repo)"
+        - name: commit
+          value: "$(tasks.git-clone.results.commit)"
+        - name: image-repo
+          value: "$(params.image-repo)"
+      runAfter:
+        - run-tests
+      taskRef:
+        name: kustomize
+      workspaces:
+        - name: source
+          workspace: shared-data
+    - name: deploy
+      params:
+        - name: manifest
+          value: "$(tasks.kustomize.results.manifest)"
+        - name: app-namespace
+          value: "$(context.pipelineRun.namespace)"
+      runAfter:
+        - kustomize
+        - buildah
+      taskRef:
+        name: deploy
+      workspaces:
+        - name: source
+          workspace: shared-data
+    - name: save-configuration
+      params:
+        - name: manifest
+          value: "$(tasks.kustomize.results.manifest)"
+        - name: app-name
+          value: "bernhard-ott-$(params.app-name)"
+        - name: sha
+          value: "$(tasks.git-clone.results.commit)"
+      runAfter:
+        - deploy
+      taskRef:
+        name: save-configuration
+      workspaces:
+        - name: source
+          workspace: shared-data
+        - name: target
+          workspace: gitops-repository
+        - name: git-credentials
+          workspace: git-credentials

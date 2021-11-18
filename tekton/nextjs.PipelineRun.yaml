@@ -1,0 +1,39 @@
+# FIXME: WIP
+---
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: icenotes-fe-pipeline-run-
+spec:
+  serviceAccountName: icenotes-fe
+  params:
+    - name: app-name
+      value: nextjs
+    - name: source-repo
+      value: https://github.com/cloud-native-garage-method-cohort/emea-8-bernhard-ott-icenotes-feapp
+    - name: commit-sha
+      value:
+    - name: image-repo
+      value: quay.io/bott_ibm/nextjs
+  pipelineRef:
+    name: icenotes-fepipeline
+  workspaces:
+    - name: shared-data
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
+    - name: gitops-repository
+      volumeClaimTemplate:
+        spec:
+          resources:
+            requests:
+              storage: 1Gi
+          accessModes:
+          - ReadWriteOnce
+    - name: git-credentials
+      secret:
+        secretName: git-credentials
