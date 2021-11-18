@@ -1,12 +1,12 @@
 import React from "react";
 
 function Header(props) {
-  const handleOnClick = () => props.setIsModalVisible(true);
+  //const handleOnClick = () => props.setIsModalVisible(true);
   
   return (
     <header style={{display:"flex", alignItems:"center", justifyContent:"space-between"}}>
-      <h2 id="app-header">IceNote</h2>
-      <button className="logoutButton"  onClick={handleOnClick}>Logout</button>
+      <h2 id="app-header">IceNotes</h2>
+      <button className="logoutButton">Login</button>
     </header>
   );
 }

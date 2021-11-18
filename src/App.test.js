@@ -2,7 +2,7 @@ import React from "react";
 import { render, unmountComponentAtNode } from "react-dom";
 import { act } from "react-dom/test-utils";
 import Footer from "./components/Footer/Footer.js";
-import Header from "./components/Header.js";
+import Header from "./components/Note/Header.js";
 
 
 let container = null;
@@ -23,12 +23,12 @@ test('footer should display current year', () => {
     act(() => {
         render(<Footer/>, container);
     });
-    expect(container.textContent).toBe("Copyright ⓒ 2021");
+    expect(container.textContent).toBe("Hello we are Team 1");
 });
 
 test('application header name test', () => {
     act(() => {
         render(<Header/>, container);
         });
-    expect(container.textContent).toBe("Simple Notes App");
+    expect(container.textContent).toBe("IceNotesLogin");
 });
