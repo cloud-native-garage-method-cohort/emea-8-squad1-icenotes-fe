@@ -1,17 +1,15 @@
-FROM quay.io/ibmgaragecloud/node:lts-stretch
+FROM quay.io/upslopeio/node-alpine as build
 
-RUN mkdir -p /app
 WORKDIR /app
-
-# copy source files
-# COPY . .
-
-COPY package*.json .
-# install dependencies
-RUN npm ci
 
 COPY . .
 
-EXPOSE 3000
+RUN npm install
+RUN npm run build
 
-CMD ["npm", "start"]
+FROM quay.io/upslopeio/nginx-unprivileged
+
+COPY --from=build /app/build /usr/share/nginx/html
+COPY --from=build /app/nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 8080
