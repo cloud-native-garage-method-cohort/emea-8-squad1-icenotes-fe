@@ -92,7 +92,7 @@ spec:
         - name: manifest
           value: "$(tasks.kustomize.results.manifest)"
         - name: app-name
-          value: "$(params.app-name)-production"
+          value: "$(params.app-name)"
         - name: sha
           value: "$(tasks.git-clone.results.commit)"
       runAfter:
