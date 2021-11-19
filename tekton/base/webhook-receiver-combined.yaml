@@ -32,6 +32,8 @@ spec:
             value: icenotes
           - name: source-repo
             value: $(tt.params.source-repo)
+          - name: source-ref
+            value: $(tt.params.source-ref)
           - name: commit-sha
             value: $(tt.params.commit-sha)
           - name: image-repo
@@ -70,6 +72,8 @@ spec:
       value: $(body.repository.url)
     - name: commit-sha
       value: $(body.head_commit.id)
+    - name: commit-ref
+      value: $(body.ref)
 
 ---
 apiVersion: route.openshift.io/v1
