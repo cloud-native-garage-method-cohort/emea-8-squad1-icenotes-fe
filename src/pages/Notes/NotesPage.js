@@ -31,7 +31,7 @@ class Note extends React.Component {
         console.log(this.props)
         return (
             <div className="note" style={style}>
-            <div onClick={this.props.onEdit}> {this.props.editing ? <input value={this.props.children}> </input>: this.props.children}</div>
+            <div onClick={this.props.onEdit}> {this.props.editing ? "You can edit here" : this.props.children}</div>
             <span className="delete-note" onClick={this.props.onDelete}> × </span>
             
            
