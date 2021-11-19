@@ -99,6 +99,11 @@ spec:
         - deploy
       taskRef:
         name: save-configuration
+      conditions:
+        - conditionRef: is-main-branch
+          params:
+            - name: branch-name
+              value: main
       workspaces:
         - name: source
           workspace: shared-data
