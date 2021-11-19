@@ -88,6 +88,11 @@ spec:
       workspaces:
         - name: source
           workspace: shared-data
+    - name: smoketest
+      taskRef:
+        name: smoketest
+      runAfter:
+        - deploy
     - name: save-configuration
       when:
         - input: "$(params.source-ref)"
@@ -101,7 +106,7 @@ spec:
         - name: sha
           value: "$(tasks.git-clone.results.commit)"
       runAfter:
-        - deploy
+        - smoketest
       taskRef:
         name: save-configuration
       # conditions:
