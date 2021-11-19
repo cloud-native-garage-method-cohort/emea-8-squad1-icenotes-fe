@@ -4,7 +4,6 @@ import { act } from "react-dom/test-utils";
 import Footer from "./components/Footer/Footer.js";
 import Header from "./components/Note/Header.js";
 
-
 let container = null;
 beforeEach(() => {
     // setup a DOM element as a render target
