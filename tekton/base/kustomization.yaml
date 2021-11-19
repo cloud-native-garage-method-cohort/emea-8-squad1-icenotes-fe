@@ -11,3 +11,5 @@ resources:
 - save-configuration.Task.yaml
 - git-credentials.Secret.yaml
 - production-repository.ConfigMap.yaml
+- database.Secret.yaml
+- smoketest.Task.yaml
