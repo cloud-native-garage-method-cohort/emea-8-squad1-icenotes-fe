@@ -5,21 +5,38 @@ import Footer from "../../components/Footer/Footer";
 import CreateArea from "../../components/Note/CreateArea";
 import { useNavigate } from 'react-router-dom';
 
+
+import Modal from 'react-modal';
 import './Note.css';
 
+const customStyles = {
+    content: {
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+    },
+  };
 
-
+Modal.setAppElement(document.getElementById("root"));
 
 class Note extends React.Component {
 
+
+    
     render(){
         var style = { backgroundColor: this.props.color };
+        console.log(this.props)
         return (
             <div className="note" style={style}>
+            <div onClick={this.props.onEdit}> {this.props.editing ? <input value={this.props.children}> </input>: this.props.children}</div>
             <span className="delete-note" onClick={this.props.onDelete}> × </span>
-            {this.props.children}
-            );
             
+           
+       
+          
         </div>
 
         )
@@ -43,7 +60,8 @@ class NoteEditor extends React.Component {
       var newNote = {
         text: this.state.text,
         color: this.state.color,
-        id: Date.now()
+        id: Date.now(),
+        editing: false,
       };
   
       this.props.onNoteAdd(newNote);
@@ -99,19 +117,30 @@ class NoteEditor extends React.Component {
         this.msnry.layout();
       }
     };
+    onNoteClick = () => {
+
+    }
+
+    onEdit = () => {
+
+    }
   
     render() {
-      var onNoteDelete = this.props.onNoteDelete;
+      var onNoteDelete = this.props.onNoteDelete; 
+      var onNoteEdit = this.props.onNoteEdit;
       return (
         <div className="notes-grid" ref="grid">
           {
             
             this.props.notes.map(function(note){
               return (
-                <Note
+                <Note 
                   key={note.id}
                   onDelete={onNoteDelete.bind(null, note)}
-                  color={note.color}>
+                  onEdit = {onNoteEdit.bind(null, note)}
+                  color={note.color}
+                  editing={note.editing}
+                  >
                   {note.text}
                 </Note>
               );
@@ -141,6 +170,8 @@ class NoteEditor extends React.Component {
       this.state = {
         notes: [],
         searchValue: '',
+        modalIsOpen: false,
+        subtitle: 'hello',
       }
     }
     componentDidMount() {
@@ -149,6 +180,8 @@ class NoteEditor extends React.Component {
         this.setState({ notes: localNotes });
       }
     }
+
+    
   
     componentDidUpdate() {
         this._updateLocalStorage();
@@ -172,7 +205,33 @@ class NoteEditor extends React.Component {
       
       this.setState({ notes: newNotes });
     };
+
+    handleNoteEdit = (note) => {
+        var noteId = note.id;
+        console.log(noteId)
+        this.setState({
+          notes: this.state.notes.map(note => {
+            if(note.id === noteId && note.editing == false) {
+              note.editing = true;
+            } 
     
+            return note;
+          })
+        });
+      }
+
+      editNote = (id, text) => {
+        this.setState({
+          notes: this.state.notes.map(note => {
+            if(note.id === id) {
+              note.editing = false;
+              note.text = text;
+            }
+    
+            return note;
+          })
+        });
+      }
     handleSearch = (text) => {
       this.setState({searchValue: text});
     };
@@ -183,7 +242,8 @@ class NoteEditor extends React.Component {
         <Header/>
           {/* <NoteSearch onSearch={(text) => this.handleSearch(text)} /> */}
           <NoteEditor onNoteAdd={this.handleNoteAdd} />
-          <NotesGrid notes={this.state.notes} onNoteDelete={this.handleNoteDelete} />
+          <NotesGrid notes={this.state.notes} onNoteDelete={this.handleNoteDelete} onNoteEdit={this.handleNoteEdit} />
+          
           <Footer/>
         </div>
       );
