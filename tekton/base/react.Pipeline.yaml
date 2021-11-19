@@ -92,7 +92,7 @@ spec:
       when:
         - input: "$(params.source-ref)"
           operator: in
-          values: ["main"]
+          values: ["refs/heads/main"]
       params:
         - name: manifest
           value: "$(tasks.kustomize.results.manifest)"
