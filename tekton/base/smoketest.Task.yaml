@@ -1,0 +1,21 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: smoketest
+spec:
+  # params:
+    # - name: app-namespace
+    #   description: namespace for the deployment
+    # - name: manifest
+    #   description: the relative path to the manifest file.
+  # results:
+    # - name: deployment-name
+    #   description: the metadata.name of the deployment
+  steps:
+    - name: curl
+      image: quay.io/cilium/alpine-curl
+      script: |
+        #!/bin/sh
+        set -e
+
+        curl -s https://icenotes-fe-squad1-icenotes-dev.itzroks-100000kr1k-aszhba-6ccd7f378ae819553d37d5f2ee142bd6-0000.eu-gb.containers.appdomain.cloud/ | grep -i "<title>ICE Notes</title>"
